@@ -32,16 +32,16 @@ version: 2.1
 #             fi
             
 
-# commands:
-#   destroy_environment:
-#     steps:
-#       - run:
-#           name: Destroy environment
-#           when: on_fail
-#           command: |
-#             aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
-#             aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-#             aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+commands:
+  destroy_environment:
+    steps:
+      - run:
+          name: Destroy environment
+          when: on_fail
+          command: |
+            aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
+            aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
 jobs:
   build-frontend:
     docker:
@@ -161,28 +161,28 @@ jobs:
             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
             --tags project=udapeople
             
-      # - run:
-      #     name: Get public IP of previous EC2 for inventory file
-      #     command: |
-      #       export EC2_tagged=backend-${CIRCLE_WORKFLOW_ID:0:7}
-      #       aws ec2 describe-instances \
-      #       --query 'Reservations[*].Instances[*].PublicIpAddress' \
-      #       --filters "Name=tag:Name,Values=${EC2_tagged}" "Name=instance-state-name,Values=running" \
-      #       --output text >> ./.circleci/ansible/inventory.txt
+      - run:
+          name: Get public IP of previous EC2 for inventory file
+          command: |
+            export EC2_tagged=backend-${CIRCLE_WORKFLOW_ID:0:7}
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:Name,Values=${EC2_tagged}" "Name=instance-state-name,Values=running" \
+            --output text >> ./.circleci/ansible/inventory.txt
 
-  #     - destroy_environment
+      - destroy_environment
 
-  #     - run:
-  #         name: Create workspace directory 
-  #         command: |
-  #           mkdir -p ~/workspace
-  #           cp ./.circleci/ansible/inventory.txt ~/workspace/inventory.txt
-  #           cat ~/workspace/inventory.txt
+      - run:
+          name: Create workspace directory 
+          command: |
+            mkdir -p ~/workspace
+            cp ./.circleci/ansible/inventory.txt ~/workspace/inventory.txt
+            cat ~/workspace/inventory.txt
 
-  #     - persist_to_workspace:
-  #         root: ~/workspace
-  #         paths: 
-  #           - inventory.txt
+      - persist_to_workspace:
+          root: ~/workspace
+          paths: 
+            - inventory.txt
             
   # configure-infrastructure:
   #   docker:
@@ -331,7 +331,6 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      - deploy-infrastructure
       - test-frontend:
           requires: [build-frontend]
       - test-backend:

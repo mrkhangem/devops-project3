@@ -32,16 +32,16 @@ version: 2.1
 #             fi
             
 
-commands:
-  destroy_environment:
-    steps:
-      - run:
-          name: Destroy environment
-          when: on_fail
-          command: |
-            aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
-            aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-            aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+# commands:
+#   destroy_environment:
+#     steps:
+#       - run:
+#           name: Destroy environment
+#           when: on_fail
+#           command: |
+#             aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
+#             aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+#             aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
 jobs:
   build-frontend:
     docker:
@@ -170,48 +170,48 @@ jobs:
             --filters "Name=tag:Name,Values=${EC2_tagged}" "Name=instance-state-name,Values=running" \
             --output text >> ./.circleci/ansible/inventory.txt
 
-      - destroy_environment
+  #     - destroy_environment
 
-      - run:
-          name: Create workspace directory 
-          command: |
-            mkdir -p ~/workspace
-            cp ./.circleci/ansible/inventory.txt ~/workspace/inventory.txt
-            cat ~/workspace/inventory.txt
+  #     - run:
+  #         name: Create workspace directory 
+  #         command: |
+  #           mkdir -p ~/workspace
+  #           cp ./.circleci/ansible/inventory.txt ~/workspace/inventory.txt
+  #           cat ~/workspace/inventory.txt
 
-      - persist_to_workspace:
-          root: ~/workspace
-          paths: 
-            - inventory.txt
+  #     - persist_to_workspace:
+  #         root: ~/workspace
+  #         paths: 
+  #           - inventory.txt
             
-  configure-infrastructure:
-    docker:
-      - image: python:3.9.13
-    steps:
-      - checkout
+  # configure-infrastructure:
+  #   docker:
+  #     - image: python:3.9.13
+  #   steps:
+  #     - checkout
 
-      - add_ssh_keys:
-          fingerprints: 
-            - "72:4d:c4:31:db:d1:df:3e:e8:48:bb:f7:95:28:97:3a"
+  #     - add_ssh_keys:
+  #         fingerprints: 
+  #           - "72:4d:c4:31:db:d1:df:3e:e8:48:bb:f7:95:28:97:3a"
 
-      - attach_workspace:
-          at: ~/workspace
+  #     - attach_workspace:
+  #         at: ~/workspace
 
-      - run:
-          name: Install dependencies
-          command: |
-            pip install awscli
-            pip install --upgrade --user ansible
+  #     - run:
+  #         name: Install dependencies
+  #         command: |
+  #           pip install awscli
+  #           pip install --upgrade --user ansible
 
-      - run:
-          name: Config server
-          command: |
-              export PATH=$PATH:~/.local/bin
-              export ANSIBLE_HOST_KEY_CHECKING=False
-              cd .circleci/ansible
-              ansible-playbook -i ~/workspace/inventory.txt configure-server.yml
+  #     - run:
+  #         name: Config server
+  #         command: |
+  #             export PATH=$PATH:~/.local/bin
+  #             export ANSIBLE_HOST_KEY_CHECKING=False
+  #             cd .circleci/ansible
+  #             ansible-playbook -i ~/workspace/inventory.txt configure-server.yml
               
-      - destroy_environment
+  #     - destroy_environment
 
 #   run-migrations:
 #     docker:

@@ -184,34 +184,34 @@ jobs:
           paths: 
             - inventory.txt
             
-  # configure-infrastructure:
-  #   docker:
-  #     - image: python:3.9.13
-  #   steps:
-  #     - checkout
+  configure-infrastructure:
+    docker:
+      - image: python:3.9.13
+    steps:
+      - checkout
 
-  #     - add_ssh_keys:
-  #         fingerprints: 
-  #           - "72:4d:c4:31:db:d1:df:3e:e8:48:bb:f7:95:28:97:3a"
+      - add_ssh_keys:
+          fingerprints: 
+            - "72:4d:c4:31:db:d1:df:3e:e8:48:bb:f7:95:28:97:3a"
 
-  #     - attach_workspace:
-  #         at: ~/workspace
+      - attach_workspace:
+          at: ~/workspace
 
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           pip install awscli
-  #           pip install --upgrade --user ansible
+      - run:
+          name: Install dependencies
+          command: |
+            pip install awscli
+            pip install --upgrade --user ansible
 
-  #     - run:
-  #         name: Config server
-  #         command: |
-  #             export PATH=$PATH:~/.local/bin
-  #             export ANSIBLE_HOST_KEY_CHECKING=False
-  #             cd .circleci/ansible
-  #             ansible-playbook -i ~/workspace/inventory.txt configure-server.yml
+      - run:
+          name: Config server
+          command: |
+              export PATH=$PATH:~/.local/bin
+              export ANSIBLE_HOST_KEY_CHECKING=False
+              cd .circleci/ansible
+              ansible-playbook -i ~/workspace/inventory.txt configure-server.yml
               
-  #     - destroy_environment
+      - destroy_environment
 
 #   run-migrations:
 #     docker:
@@ -344,8 +344,8 @@ workflows:
           filters:
             branches:
               only: [main]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:

@@ -161,14 +161,14 @@ jobs:
             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
             --tags project=udapeople
             
-      - run:
-          name: Get public IP of previous EC2 for inventory file
-          command: |
-            export EC2_tagged=backend-${CIRCLE_WORKFLOW_ID:0:7}
-            aws ec2 describe-instances \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:Name,Values=${EC2_tagged}" "Name=instance-state-name,Values=running" \
-            --output text >> ./.circleci/ansible/inventory.txt
+      # - run:
+      #     name: Get public IP of previous EC2 for inventory file
+      #     command: |
+      #       export EC2_tagged=backend-${CIRCLE_WORKFLOW_ID:0:7}
+      #       aws ec2 describe-instances \
+      #       --query 'Reservations[*].Instances[*].PublicIpAddress' \
+      #       --filters "Name=tag:Name,Values=${EC2_tagged}" "Name=instance-state-name,Values=running" \
+      #       --output text >> ./.circleci/ansible/inventory.txt
 
   #     - destroy_environment
 
@@ -344,7 +344,7 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
-              only: [test-feature-branch]
+              only: [main]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
       # - run-migrations:

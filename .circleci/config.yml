@@ -159,7 +159,7 @@ jobs:
             --filters "Name=tag:Name,Values=${EC2_tagged}" "Name=instance-state-name,Values=running" \
             --output text >> ./.circleci/ansible/inventory.txt
 
-      - destroy_environment
+      # - destroy_environment
 
       # - run:
       #     name: Create workspace directory 

@@ -420,7 +420,7 @@ jobs:
               if curl -s --insecure ${URL} | grep "Welcome"
               then
                 echo "Success"
-                return 0
+                return 1
               else
                 echo "Failed"
                 return 1

@@ -159,19 +159,19 @@ jobs:
             --filters "Name=tag:Name,Values=${EC2_tagged}" "Name=instance-state-name,Values=running" \
             --output text >> ./.circleci/ansible/inventory.txt
 
-      # - destroy_environment
+      - destroy_environment
 
-      # - run:
-      #     name: Create workspace directory 
-      #     command: |
-      #       mkdir -p ~/workspace
-      #       cp ./.circleci/ansible/inventory.txt ~/workspace/inventory.txt
-      #       cat ~/workspace/inventory.txt
+      - run:
+          name: Create workspace directory 
+          command: |
+            mkdir -p ~/workspace
+            cp ./.circleci/ansible/inventory.txt ~/workspace/inventory.txt
+            cat ~/workspace/inventory.txt
 
-      # - persist_to_workspace:
-      #     root: ~/workspace
-      #     paths: 
-      #       - inventory.txt
+      - persist_to_workspace:
+          root: ~/workspace
+          paths: 
+            - inventory.txt
             
 #   configure-infrastructure:
 #     docker:
